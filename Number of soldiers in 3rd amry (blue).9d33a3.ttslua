@@ -1,0 +1,11 @@
+min_value = 0
+max_value = 6
+
+function onUpdate()
+  if self.Counter.getValue() > max_value then
+    self.Counter.setValue(max_value)
+  end
+  if self.Counter.getValue() < min_value then
+    self.Counter.setValue(min_value)
+  end
+end

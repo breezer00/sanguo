@@ -1,0 +1,69 @@
+dieGUIDs = {"60cb3b", "f27eea", "f367c5", "da6f7e", "f6f9b2", "09eb61"}
+numSoilderGUID = "50fff7"
+extraNumGUID = "286d00"
+moraleGUID = "ccf46c"
+
+function onLoad()
+    generateButtonParameters()
+    createButtons()
+end
+
+function areAllDiesRested(dies)
+  for _, die in ipairs(dies) do
+    if not die.isDestroyed() and not die.resting then
+      return false
+    end
+  end
+  return true
+end
+
+function rollDies()
+  -- Roll number of dies equal to number of soilders.
+  local numSoilders = getObjectFromGUID(numSoilderGUID).getValue()
+  print("Number of soilders: " .. numSoilders)
+  local diesResults = 0
+  local dies = {}
+  -- Roll dies.
+  for i = 1, numSoilders do
+    dies[i] = getObjectFromGUID(dieGUIDs[i])
+    dies[i].randomize()
+  end
+  Wait.condition(
+    function()
+      -- Add the results from dies roll.
+      for i = 1, numSoilders do
+        diesResults = diesResults + dies[i].getValue()
+      end
+      print("Die Results: " .. diesResults)
+      -- Add results up, plus extra number.
+      local extraNum = getObjectFromGUID(extraNumGUID).getValue()
+      print("Extra number: " .. extraNum)
+      local extraNumRes = extraNum + diesResults
+
+      -- Process morale.
+     local moral = getObjectFromGUID(moraleGUID).getValue()
+     finalResult = extraNumRes * (moral + 1)
+     print("Final result: " .. finalResult)
+     value_button_parameters.label = tostring(finalResult)
+     self.editButton(value_button_parameters)
+    end,
+    function() return areAllDiesRested(dies) end
+  )
+end
+
+function createButtons()
+    self.createButton(value_button_parameters)
+end
+
+function generateButtonParameters()
+    value_button_parameters = {
+        index = 0, click_function = 'rollDies', function_owner = self,
+        position = {0, 0.1, 1.2}, width = 1000, height = 500, font_size = 300,
+        color = Color.Blue, font_color = {1,1,1}, value = '0'
+    }
+end
+
+
+Could not catalog #include - file not found:
+
+C:\Users\Yanlei\Documents\Tabletop Simulator\sanguo\rollBlue.ttslua
